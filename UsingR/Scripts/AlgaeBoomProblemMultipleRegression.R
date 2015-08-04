@@ -1,0 +1,12 @@
+setwd('D:\\Learning\\R\\WorkingDirectory')
+algae <- read.table('Analysis.txt',header=F,dec='.',col.name = c('season','size','speed','mxPH','mn02','C1','N03','NH4','oP04','P04','Chla','a1','a2','a3','a4','a5','a6','a7'),na.strings=c('XXXXXXX'))
+summary(algae)
+library(class)
+library(DMwR)
+algae <- algae[-manyNAs(algae),]
+clean.algae <- knnImputation(algae,k=10)
+nrow(algae)
+lm.a1 <- lm(a1~.,data=clean.algae[,1:12])
+lm2.a1 <- update(lm.a1,. ~ .,-season)
+summary(lm2.a1)
+final.a1 <- step(lm.a1)
